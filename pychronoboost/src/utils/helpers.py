@@ -27,8 +27,10 @@ def check_timeseries_type(data: pd.DataFrame, column: str) -> str:
             converted = pd.to_datetime(data[column])
             # Check if all times are midnight, indicating a 'date' type
             if all(time == pd.Timestamp(0).time() for time in converted.dt.time):
+                data[column] = converted
                 return TIMESTEP_DATE
             else:
+                data[column] = converted
                 return TIMESTEP_DATETIME
         except ValueError:
             raise ValueError(
