@@ -5,7 +5,7 @@ from pychronoboost.src.utils.value_impute import (
     LinearImputation,
 )
 from pychronoboost.src.utils.timestep_impute import get_timestep_imputation_strategy
-
+from pychronoboost.src.feature_generator.timeseries_feature_generator import TimeSeriesFeatureGenerator
 
 class TimeSeriesData:
     value_imputation_strategy = {
