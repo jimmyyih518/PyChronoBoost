@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from pychronoboost.src.utils.helpers import (
+from pychronoboost.pychronoboost.utils.helpers import (
     check_timeseries_type,
     TIMESTEP_INTEGER,
     TIMESTEP_FLOAT,

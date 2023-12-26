@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from pychronoboost.src.pipeline.feature_pipeline import FeaturePipeline
+from pychronoboost.pychronoboost.pipeline.feature_pipeline import FeaturePipeline
 
 
 @pytest.fixture

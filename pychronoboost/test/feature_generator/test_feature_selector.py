@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from xgboost import XGBRegressor
-from pychronoboost.src.feature_generator.timeseries_feature_selector import (
+from pychronoboost.pychronoboost.feature_generator.timeseries_feature_selector import (
     XGBoostFeatureSelector,
 )
 

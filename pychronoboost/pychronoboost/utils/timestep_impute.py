@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
-from pychronoboost.src.utils.helpers import (
+from pychronoboost.pychronoboost.utils.helpers import (
     check_timeseries_type,
     TIMESTEP_INTEGER,
     TIMESTEP_FLOAT,

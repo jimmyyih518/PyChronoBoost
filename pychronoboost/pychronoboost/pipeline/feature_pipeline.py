@@ -1,15 +1,15 @@
 import pandas as pd
-from pychronoboost.src.data.timeseries_data import (
+from pychronoboost.pychronoboost.data.timeseries_data import (
     TimeSeriesData,
 ) 
-from pychronoboost.src.feature_generator.timeseries_feature_generator import (
+from pychronoboost.pychronoboost.feature_generator.timeseries_feature_generator import (
     TimeSeriesFeatureGenerator,
 )
-from pychronoboost.src.feature_generator.timeseries_feature_selector import (
+from pychronoboost.pychronoboost.feature_generator.timeseries_feature_selector import (
     XGBoostFeatureSelector,
     FeatureSelectionStrategy,
 )
-from pychronoboost.src.output.output_formatter import OutputFormatter
+from pychronoboost.pychronoboost.output.output_formatter import OutputFormatter
 
 
 class FeaturePipeline:

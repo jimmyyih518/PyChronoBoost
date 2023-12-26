@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from pychronoboost.src.data.timeseries_data import TimeSeriesData
+from pychronoboost.pychronoboost.data.timeseries_data import TimeSeriesData
 
 
 def test_time_series_data_preprocess():
