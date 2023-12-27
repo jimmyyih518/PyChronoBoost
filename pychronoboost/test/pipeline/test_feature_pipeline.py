@@ -16,8 +16,10 @@ def sample_time_series_data():
 
 
 def test_feature_pipeline_execution(sample_time_series_data):
+    print('initial data', sample_time_series_data)
     pipeline = FeaturePipeline("timestamp", "value", max_window_size=3, num_features=2)
     processed_data = pipeline.execute(sample_time_series_data, preprocess=False)
+    print('processed_data', processed_data)
 
     # Check if the pipeline returns a DataFrame
     assert isinstance(processed_data, pd.DataFrame)
