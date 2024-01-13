@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-from pychronoboost.pychronoboost.utils.timestep_impute import (
+from pychronoboost.impute.timestep_impute import (
     DateImputation,
     DateTimeImputation,
     IntegerImputation,
