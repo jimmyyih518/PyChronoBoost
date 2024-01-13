@@ -1,65 +1,43 @@
 import pytest
 import pandas as pd
 import numpy as np
-from pychronoboost.impute.timestep_impute import (
-    DateImputation,
-    DateTimeImputation,
-    IntegerImputation,
-    FloatImputation,
-    get_timestep_imputation_strategy,
+from pychronoboost.impute.value_impute import (
+    get_value_imputation_strategy,
+    LastValueImputation,
+    ZeroImputation,
+    LinearImputation,
 )
 
-# Sample data for tests
-date_data = pd.DataFrame({"date": pd.to_datetime(["2020-01-01", "2020-01-03"])})
-datetime_data = pd.DataFrame(
-    {"datetime": pd.to_datetime(["2020-01-01 00:00:00", "2020-01-01 00:00:02"])}
-)
-integer_data = pd.DataFrame({"integer": [1, 3]})
-float_data = pd.DataFrame({"float": [1.0, 1.2]})
+
+# Test for correct strategy creation
+def test_correct_strategy_creation():
+    assert isinstance(get_value_imputation_strategy("last"), LastValueImputation)
+    assert isinstance(get_value_imputation_strategy("zero"), ZeroImputation)
+    assert isinstance(get_value_imputation_strategy("linear"), LinearImputation)
 
 
-def test_date_imputation():
-    strategy = DateImputation()
-    result = strategy.impute(date_data, "date")
-    assert len(result) == 3
-    assert result["date"].isna().sum() == 0
+# Test for exception on unrecognized strategy
+def test_unrecognized_strategy():
+    with pytest.raises(NotImplementedError):
+        get_value_imputation_strategy("unknown")
 
 
-def test_datetime_imputation():
-    strategy = DateTimeImputation()
-    result = strategy.impute(datetime_data, "datetime")
-    assert len(result) == 3
-    assert result["datetime"].isna().sum() == 0
+def test_last_value_imputation():
+    strategy = get_value_imputation_strategy("last")
+    data = pd.DataFrame({"col1": [1, 2, None, 4]})
+    data["imputed"] = strategy.impute(data["col1"])
+    assert data["imputed"].isnull().sum().sum() == 0
 
 
-def test_integer_imputation():
-    strategy = IntegerImputation()
-    result = strategy.impute(integer_data, "integer")
-    assert len(result) == 3
-    assert result["integer"].isna().sum() == 0
+def test_zero_imputation():
+    strategy = get_value_imputation_strategy("zero")
+    data = pd.DataFrame({"col1": [1, None, 3, 4]})
+    data["imputed"] = strategy.impute(data["col1"])
+    assert (data["imputed"] == [1, 0, 3, 4]).all()
 
 
-def test_float_imputation():
-    # Adjusting the input data
-    adjusted_float_data = pd.DataFrame({"float": [1.0, 1.3]})
-
-    strategy = FloatImputation()
-    result = strategy.impute(adjusted_float_data, "float")
-    assert len(result) > 2
-
-
-def test_get_timestep_imputation_strategy():
-    date_strategy = get_timestep_imputation_strategy(date_data, "date")
-    assert isinstance(date_strategy, DateImputation)
-
-    datetime_strategy = get_timestep_imputation_strategy(datetime_data, "datetime")
-    assert isinstance(datetime_strategy, DateTimeImputation)
-
-    integer_strategy = get_timestep_imputation_strategy(integer_data, "integer")
-    assert isinstance(integer_strategy, IntegerImputation)
-
-    float_strategy = get_timestep_imputation_strategy(float_data, "float")
-    assert isinstance(float_strategy, FloatImputation)
-
-    with pytest.raises(ValueError):
-        get_timestep_imputation_strategy(date_data, "unknown")
+def test_linear_imputation():
+    strategy = get_value_imputation_strategy("linear")
+    data = pd.DataFrame({"col1": [1, None, 3, 4]})
+    data["imputed"] = strategy.impute(data["col1"])
+    assert data["imputed"][1] == 2  # Assuming linear interpolation between 1 and 3
