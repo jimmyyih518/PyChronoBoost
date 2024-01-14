@@ -37,6 +37,12 @@ class LinearImputation(ValueImputationStrategy):
 
 
 def get_value_imputation_strategy(strategy: str) -> ValueImputationStrategy:
+    """
+    Finds the corresponding value imputation strategy class
+
+    :param strategy: name of the strategy to be used
+    :return: A value imputation strategy class object
+    """
     value_imputation_strategy = {
         "last": LastValueImputation(),
         "zero": ZeroImputation(),
@@ -44,11 +50,10 @@ def get_value_imputation_strategy(strategy: str) -> ValueImputationStrategy:
     }
 
     if strategy not in value_imputation_strategy:
-        raise NotImplementedError(
-            f"Strategy {strategy} not available"
-        )
+        raise NotImplementedError(f"Strategy {strategy} not available")
 
     return value_imputation_strategy[strategy]
+
 
 # Usage
 # imputer = get_value_imputation_strategy("linear")

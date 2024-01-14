@@ -55,7 +55,16 @@ class FloatImputation(TimeStepImputationStrategy):
         return data
 
 
-def get_timestep_imputation_strategy(data: pd.DataFrame, timestep_column: str):
+def get_timestep_imputation_strategy(
+    data: pd.DataFrame, timestep_column: str
+) -> TimeStepImputationStrategy:
+    """
+    Finds the corresponding timestep imputation strategy class for the type of the timestep column
+
+    :param data: input dataframe
+    :param timestep_column: column name of the timestamp column
+    :return: A timestep imputation strategy class object
+    """
     timestep_type = check_timeseries_type(data, timestep_column)
     if timestep_type == TIMESTEP_DATE:
         return DateImputation()

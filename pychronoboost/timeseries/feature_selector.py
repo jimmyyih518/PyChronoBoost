@@ -33,14 +33,16 @@ class XGBoostFeatureSelector(FeatureSelectionStrategy):
         target_column: str,
         timestamp_column: str,
         original_feature_columns: List[str] = [],
-    ):
+    ) -> None:
         """
         Select important features from the data using XGBoost.
 
         :param data: The DataFrame containing features and target.
+        :param feature_columns: The names of all feature columns in a list
         :param target_column: The name of the target column.
         :param timestamp_column: The name of the timestamp column.
-        :return: DataFrame with selected features, including timestamp and target columns.
+        :original_feature_columns: The names of the original feature columns in a list
+        :return: None (Modifies dataframe in place)
         """
         model_data = data.dropna()
         X = model_data[feature_columns]
@@ -65,7 +67,16 @@ class XGBoostFeatureSelector(FeatureSelectionStrategy):
         data.drop(columns=columns_to_drop, inplace=True)
 
 
-def get_feature_selector(selector_model: str, num_features: int):
+def get_feature_selector(
+    selector_model: str, num_features: int
+) -> FeatureSelectionStrategy:
+    """
+    Finds the corresponding the feature selection class method
+
+    :param selector_model: name of the feature selector model
+    :param num_features: Max number of features to be returned after feature selection
+    :return: feature selection class corresponding to input selector_model
+    """
     feature_selectors = {"XGB": XGBoostFeatureSelector(num_features)}
     if selector_model not in feature_selectors:
         raise NotImplementedError(f"Feature Selector {selector_model} not available")

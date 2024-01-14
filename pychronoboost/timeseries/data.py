@@ -1,21 +1,29 @@
 import pandas as pd
+from typing import List
 from pychronoboost.impute.timestep_impute import get_timestep_imputation_strategy
-from pychronoboost.impute.value_impute import (
-    get_value_imputation_strategy,
-)
+from pychronoboost.impute.value_impute import get_value_imputation_strategy
 from pychronoboost.timeseries.feature_generator import TimeSeriesFeatureGenerator
 from pychronoboost.timeseries.feature_selector import get_feature_selector
 
 
 class TimeSeriesData:
-    def __init__(self, data, timestep_column):
+    def __init__(self, data: pd.DataFrame, timestep_column: str):
+        """
+        Initializes the TimeSeriesData object.
+
+        Args:
+            data (pd.DataFrame): The pandas DataFrame containing the time series data.
+            timestep_column (str): The name of the column in 'data' that represents the timestep.
+
+        Raises:
+            ValueError: If 'data' is not a pandas DataFrame or if 'timestep_column' is not in 'data'.
+        """
         self.data = data
         self.timestep_column = timestep_column
         self._validate_data()
         self.original_feature_columns = self.data.columns.tolist()
-        
 
-    def _validate_data(self):
+    def _validate_data(self) -> None:
         """
         Validates the input data to ensure it meets the requirements.
         """
@@ -29,13 +37,27 @@ class TimeSeriesData:
 
     def process_timeseries_features(
         self,
-        feature_columns,
-        target_column,
-        value_impute_strategy="last",
-        max_window_size=3,
-        feature_selector_model="XGB",
-        max_features=5,
-    ):
+        feature_columns: List[str],
+        target_column: str,
+        value_impute_strategy: str = "last",
+        max_window_size: int = 3,
+        feature_selector_model: str = "XGB",
+        max_features: int = 5,
+    ) -> pd.DataFrame:
+        """
+        Processes time series features including imputation and feature generation.
+
+        Args:
+            feature_columns (List[str]): A list of column names to be used for feature generation.
+            target_column (str): The name of the target column.
+            value_impute_strategy (str): Strategy for imputing missing values.
+            max_window_size (int): Maximum window size for feature generation.
+            feature_selector_model (str): Model to use for feature selection.
+            max_features (int): Maximum number of features to select.
+
+        Returns:
+            pd.DataFrame: The processed DataFrame with imputed and selected features.
+        """
         self.impute_timesteps()
         self.impute_values(feature_columns, value_impute_strategy)
         generated_features = self.generate_features(feature_columns, max_window_size)
@@ -45,9 +67,9 @@ class TimeSeriesData:
         )
         return self.data
 
-    def impute_timesteps(self):
+    def impute_timesteps(self) -> None:
         """
-        Impute missing timesteps in the time series data.
+        Imputes missing timesteps in the time series data.
         """
         timestep_strategy = get_timestep_imputation_strategy(
             self.data, self.timestep_column
@@ -61,7 +83,17 @@ class TimeSeriesData:
             imputed_timesteps, self.data, on=self.timestep_column, how="left"
         )
 
-    def impute_values(self, value_columns, strategy):
+    def impute_values(self, value_columns: List[str], strategy: str) -> None:
+        """
+        Imputes missing values in specified columns of the DataFrame.
+
+        Args:
+            value_columns (List[str]): List of column names for which to impute missing values.
+            strategy (str): Strategy to use for value imputation.
+
+        Raises:
+            ValueError: If any of the specified columns are not in the DataFrame.
+        """
         imputer = get_value_imputation_strategy(strategy)
 
         for col in value_columns:
@@ -71,7 +103,17 @@ class TimeSeriesData:
                 )
             self.data[col] = imputer.impute(self.data[col])
 
-    def generate_features(self, columns, max_window_size):
+    def generate_features(self, columns: List[str], max_window_size: int) -> List[str]:
+        """
+        Generates new features based on specified columns and window size.
+
+        Args:
+            columns (List[str]): List of column names to use for feature generation.
+            max_window_size (int): Maximum window size for generating features.
+
+        Returns:
+            List[str]: A list of names of the generated features.
+        """
         feature_generator = TimeSeriesFeatureGenerator(max_window_size)
         all_generated_features = []
         for col in columns:
@@ -81,8 +123,21 @@ class TimeSeriesData:
         return all_generated_features
 
     def select_features(
-        self, feature_columns, target_column, max_features=5, selector_model="XGB"
-    ):
+        self,
+        feature_columns: List[str],
+        target_column: str,
+        max_features: int = 5,
+        selector_model: str = "XGB",
+    ) -> None:
+        """
+        Selects the most relevant features based on the specified selection model.
+
+        Args:
+            feature_columns (List[str]): List of column names to consider for selection.
+            target_column (str): The name of the target column.
+            max_features (int): Maximum number of features to select.
+            selector_model (str): Model to use for feature selection.
+        """
         feature_selector = get_feature_selector(selector_model, max_features)
         feature_selector.select_features(
             self.data,

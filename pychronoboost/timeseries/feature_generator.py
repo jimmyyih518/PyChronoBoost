@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import List
 
 
 class TimeSeriesFeatureGenerator:
@@ -11,13 +12,13 @@ class TimeSeriesFeatureGenerator:
         self.max_window_size = max_window_size
         self.generated_features = []
 
-    def generate_features(self, data: pd.DataFrame, value_column: str):
+    def generate_features(self, data: pd.DataFrame, value_column: str) -> List[str]:
         """
         Generate statistical features for the time series data.
 
         :param data: The time series data as a Pandas DataFrame.
         :param value_column: The name of the column containing the values.
-        :return: DataFrame with generated features.
+        :return: List of generated features (dataframe is modified in place)
         """
         self.generated_features = []
         for window_size in range(1, self.max_window_size + 1):
@@ -27,7 +28,7 @@ class TimeSeriesFeatureGenerator:
 
     def _generate_window_features(
         self, data: pd.DataFrame, value_column: str, window_size: int
-    ):
+    ) -> pd.DataFrame:
         """
         Generate features for a specific window size.
 
