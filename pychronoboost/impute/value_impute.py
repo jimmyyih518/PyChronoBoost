@@ -15,7 +15,7 @@ class ValueImputationStrategy(ABC):
 
 class LastValueImputation(ValueImputationStrategy):
     def impute(self, data):
-        return data.fillna(method="ffill")
+        return data.fillna(method="ffill").fillna(method="bfill")
 
 
 class ZeroImputation(ValueImputationStrategy):
