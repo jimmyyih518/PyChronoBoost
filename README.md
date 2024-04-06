@@ -2,13 +2,13 @@
 
 Automated Time Series Feature Engineering
 
-PyChronoBoost is a sophisticated Python package designed for time series data analysis. It offers robust functionality for imputing missing values, generating and selecting features, and handling various complexities associated with time series data.
+PyChronoBoost is a utility Python package designed for time series data analysis and forecasting. It offers robust functionality for imputing missing values, generating and selecting features, and handling various complexities associated with time series data.
 
 ## Features
 
 - **Time Series Imputation**: Efficiently handles missing data in time series, both in terms of values and time steps.
 - **Feature Generation**: Automatic generation of relevant features from time series data.
-- **Feature Selection**: Utilizes advanced algorithms like XGBoost to select the most significant features for your analysis.
+- **Feature Selection**: Utilizes algorithms like XGBoost to select the most significant features for your analysis.
 
 ## Installation
 
